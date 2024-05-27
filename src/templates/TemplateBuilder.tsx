@@ -72,10 +72,6 @@ export const TemplateBuilder = () => {
     }
   };
 
-  useEffect(() => {
-    console.log('Update');
-  }, [template]);
-
   return (
     <div className='p-10'>
       <h1 className='text-2xl font-bold mb-4'>Resume Template Editor</h1>
@@ -95,7 +91,7 @@ export const TemplateBuilder = () => {
           ))}
         </select>
       </div>
-      <div>
+      <div className='mb-8'>
         <label className='mr-4'>Template Name:</label>
         <input
           type='text'
@@ -104,11 +100,19 @@ export const TemplateBuilder = () => {
           className='border p-2'
         />
       </div>
-      <TemplateChoices
-        onChange={setTemplate}
-        template={template}
-        value={template.header.content}
-      />
+      <div className='flex flex-col'>
+        <label className='text-2xl font-semibold'>Apply Attributes</label>
+        <label className='text-1xl text-gray-500'>
+          Choose the part of the resume that you want the attribute to be added
+          to
+        </label>
+
+        <TemplateChoices
+          onChange={setTemplate}
+          template={template}
+          value={template.header.content}
+        />
+      </div>
       <div className='flex mb-10 flex-col justify-between'>
         <label className='text-2xl font-semibold'>Header</label>
         <TemplateSection

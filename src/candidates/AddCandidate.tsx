@@ -236,7 +236,6 @@ const AddCandidate: React.FC = () => {
         </button>
       </div>
 
-      {/* Resume Preview */}
       <div className='mt-10' id='resume-preview'>
         <h3 className='text-xl mb-4'>Resume Preview</h3>
         {selectedTemplate && <ResumePreview template={selectedTemplate} />}
