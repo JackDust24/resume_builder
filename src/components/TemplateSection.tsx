@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { TemplateStyles, TemplateType } from '../types/template';
 import { StyleSelector } from './StyleSelector';
 import { SECTION_CHOICES } from '../templates/TemplateBuilder';

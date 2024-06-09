@@ -33,6 +33,10 @@ export const StyleSelector = ({
     alert(`Saved styles for the ${type}`);
   };
 
+  const handleReset = () => {
+    setStyles(templateStyle);
+  };
+
   return (
     <div className='flex flex-col gap-4'>
       <div className='flex flex-row gap-8 mb-8'>
@@ -105,12 +109,19 @@ export const StyleSelector = ({
           </div>
         </div>
       </div>
-      <div className='flex justify-center'>
+      <div className='flex justify-between my-8'>
         <button
-          className='bg-[#0096FF] hover:bg-blue-500 active:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300 text-xl shadow-lg text-white px-4 py-2 rounded mr-2 disabled:bg-opacity-15'
+          className='bg-[#0096FF] hover:bg-blue-800 active:bg-blue-900 focus:outline-none focus:ring focus:ring-blue-300 text-xl text-white px-4 py-2 rounded mr-2 disabled:bg-opacity-15'
           onClick={handleSave}
         >
           Save {type}
+        </button>
+
+        <button
+          onClick={handleReset}
+          className='bg-[#f82c15] hover:bg-[#ce1a06] active:bg-[#be1805] shadow-xl p-2 focus:outline-none focus:ring focus:ring-white text-white rounded mr-2 disabled:bg-opacity-15'
+        >
+          Reset Styles
         </button>
       </div>
     </div>

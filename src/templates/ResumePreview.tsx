@@ -1,8 +1,6 @@
-import React from 'react';
 import { TemplateType } from '../types/template';
-import 'tailwindcss/tailwind.css';
 
-const ResumePreview = ({ template }: { template: TemplateType }) => {
+export const ResumePreview = ({ template }: { template: TemplateType }) => {
   return (
     <div className='p-4 border rounded shadow-lg bg-white relative'>
       {template.watermark && (
@@ -51,5 +49,3 @@ const ResumePreview = ({ template }: { template: TemplateType }) => {
     </div>
   );
 };
-
-export default ResumePreview;

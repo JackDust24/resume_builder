@@ -1,20 +1,16 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
-import ResumePreview from './ResumePreview';
+import { useState, ChangeEvent } from 'react';
 import { TemplateSection } from '../components/TemplateSection';
 import { TemplateChoices } from '../components/TemplateChoices';
-import { TemplateType, initialTemplate } from '../types/template';
-import { ResetSection } from '../components/ResetSection';
+import { initialTemplate } from '../types/template';
+import { useTemplateContext } from '../providers/TemplateProvider';
 
 export const SECTION_CHOICES = ['Header', 'Body', 'Footer', 'Margin'];
 
 export const TemplateBuilder = () => {
-  const [template, setTemplate] = useState<TemplateType>(initialTemplate);
-  const [editingTemplate, setEditingTemplate] = useState(false);
+  const { template, setTemplate, templateList, setTemplateList } =
+    useTemplateContext();
 
-  const [templateList, setTemplateList] = useState<TemplateType[]>(() => {
-    const savedTemplates = localStorage.getItem('templates');
-    return savedTemplates ? JSON.parse(savedTemplates) : [];
-  });
+  const [editingTemplate, setEditingTemplate] = useState(false);
 
   const handleChooseTemplate = (templateIdx: number | string) => {
     if (templateIdx === 0) {
@@ -73,126 +69,90 @@ export const TemplateBuilder = () => {
   };
 
   return (
-    <div className='p-10'>
-      <h1 className='text-2xl font-bold mb-4'>Resume Template Editor</h1>
-      <div className='mb-4'>
-        <label className='block mb-2'>Select Template</label>
-        <select
-          onChange={(e) => handleChooseTemplate(Number(e.target.value))}
-          className='border p-2 w-full'
-        >
-          <option key={`x-${template.id}`} value=''>
-            Create a template
-          </option>
-          {templateList.map((template) => (
-            <option key={`xxx-${template.id}`} value={template.id}>
-              {template.name}
+    <div className='p-10 w-full max-h-screen'>
+      <div className='overflow-x-auto overflow-y-auto'>
+        <h1 className='text-2xl font-bold mb-4'>Resume Template Editor</h1>
+        <div className='mb-4'>
+          <label className='block mb-2'>Select Template</label>
+          <select
+            onChange={(e) => handleChooseTemplate(Number(e.target.value))}
+            className='border p-2 w-full'
+          >
+            <option key={`x-${template.id}`} value=''>
+              Create a template
             </option>
-          ))}
-        </select>
-      </div>
-      <div className='mb-8'>
-        <label className='mr-4'>Template Name:</label>
-        <input
-          type='text'
-          value={template.name}
-          onChange={(e) => setTemplate({ ...template, name: e.target.value })}
-          className='border p-2'
-        />
-      </div>
-      <div className='flex flex-col'>
-        <label className='text-2xl font-semibold'>Apply Attributes</label>
-        <label className='text-1xl text-gray-500'>
-          Choose the part of the resume that you want the attribute to be added
-          to
-        </label>
-
-        <TemplateChoices
-          onChange={setTemplate}
-          template={template}
-          value={template.header.content}
-        />
-      </div>
-      <div className='flex mb-10 flex-col justify-between'>
-        <label className='text-2xl font-semibold'>Header</label>
-        <TemplateSection
-          onChange={setTemplate}
-          template={template}
-          type={'Header'}
-          templateStyle={template.header.styles}
-        />
-        <div className='flex justify-end'>
-          <ResetSection
-            onReset={() =>
-              setTemplate({
-                ...template,
-                header: initialTemplate.header,
-              })
-            }
-            section='Header'
+            {templateList.map((template) => (
+              <option key={`xxx-${template.id}`} value={template.id}>
+                {template.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className='mb-8'>
+          <label className='mr-4'>Template Name:</label>
+          <input
+            type='text'
+            value={template.name}
+            onChange={(e) => setTemplate({ ...template, name: e.target.value })}
+            className='border p-2'
           />
         </div>
-      </div>
-      <div className='flex mb-10 flex-col justify-between gap-4'>
-        <label className='text-2xl font-semibold'>Body</label>
-        <TemplateSection
-          onChange={setTemplate}
-          template={template}
-          type={'Body'}
-          templateStyle={template.body.styles}
-        />
-        <div className='flex justify-end'>
-          <ResetSection
-            onReset={() =>
-              setTemplate({
-                ...template,
-                body: initialTemplate.body,
-              })
-            }
-            section='Body'
+        <div className='flex flex-col overflow-y-auto'>
+          <label className='text-2xl font-semibold'>Apply Attributes</label>
+          <label className='text-1xl text-gray-500'>
+            Choose the part of the resume that you want the attribute to be
+            added to
+          </label>
+          <TemplateChoices
+            onChange={setTemplate}
+            template={template}
+            value={template.header.content}
           />
         </div>
-      </div>
-      <div className='flex mb-10 flex-col justify-between gap-4'>
-        <label className='text-2xl font-semibold'>Footer</label>
-        <TemplateSection
-          onChange={setTemplate}
-          template={template}
-          type='Footer'
-          templateStyle={template.footer.styles}
-        />
-        <div className='flex justify-end'>
-          <ResetSection
-            onReset={() =>
-              setTemplate({
-                ...template,
-                footer: initialTemplate.footer,
-              })
-            }
-            section='Footer'
+        <div className='flex mb-10 flex-col justify-between gap-4 overflow-y-auto'>
+          <label className='text-2xl font-semibold'>Header</label>
+          <TemplateSection
+            onChange={setTemplate}
+            template={template}
+            type={'Header'}
+            templateStyle={template.header.styles}
           />
         </div>
-      </div>
-      <div className='flex mb-10 flex-col justify-between gap-4'>
-        <label className='text-2xl font-semibold'>Upload Watermark</label>
-        <input
-          type='file'
-          onChange={(e) => handleFileUpload(e)}
-          className='border p-2'
-        />
-      </div>
-      <div className='mt-4'>
-        <button
-          className='bg-blue-500 hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring focus:ring-blue-400 text-2xl text-white px-4 py-2 rounded-lg mr-2 disabled:bg-opacity-15'
-          onClick={handleSaveTemplate}
-          disabled={!template.name.length}
-        >
-          {editingTemplate ? 'Save ' : 'Create '} Template
-        </button>
-      </div>
-      <div className='mt-10'>
-        <h3 className='text-xl mb-4'>Resume Preview</h3>
-        <ResumePreview template={template} />
+        <div className='flex mb-10 flex-col justify-between gap-4 overflow-y-auto'>
+          <label className='text-2xl font-semibold'>Body</label>
+          <TemplateSection
+            onChange={setTemplate}
+            template={template}
+            type={'Body'}
+            templateStyle={template.body.styles}
+          />
+        </div>
+        <div className='flex mb-10 flex-col justify-between gap-4 overflow-y-auto'>
+          <label className='text-2xl font-semibold'>Footer</label>
+          <TemplateSection
+            onChange={setTemplate}
+            template={template}
+            type='Footer'
+            templateStyle={template.footer.styles}
+          />
+        </div>
+        <div className='flex mb-10 flex-col justify-between gap-4'>
+          <label className='text-2xl font-semibold'>Upload Watermark</label>
+          <input
+            type='file'
+            onChange={(e) => handleFileUpload(e)}
+            className='border p-2'
+          />
+        </div>
+        <div className='my-8'>
+          <button
+            className='bg-blue-500 hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring focus:ring-blue-400 text-2xl text-white px-4 py-2 rounded-lg mr-2 disabled:bg-opacity-15'
+            onClick={handleSaveTemplate}
+            disabled={!template.name.length}
+          >
+            {editingTemplate ? 'Save ' : 'Create '} Template
+          </button>
+        </div>
       </div>
     </div>
   );
